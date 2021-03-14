@@ -1,0 +1,56 @@
+Pavel Radu-Bogdan, 334CA
+ACS, UPB
+
+                                    README
+                               2nd Homework - APD
+                           Traffic control simulator
+
+1. Objective
+    The objective of this homework was to simulate a trafic control system,
+using parallelization in Java, provided by the Runnable interface, the
+parallelization primitives, such as CyclicBarrier, Semaphore and concurrent
+data structures: ConcurrentHashMap and List, and Blocking Queue
+
+2. Implementation
+    The 1st task was done only using a sleep function call inside each thread,
+as there was no need for any synchronization.
+    The 2nd task was done using only a semaphore, to limit the maximum number
+of cars present at a time in the roundabout.
+    The 3rd task was done using a list of semaphores, one for each direction,
+in order to limit the traffic on each lane to 1 car.
+    The 4th task was done using a semaphore list and two barriers: the first
+barrier was used to wait for all the cars to reach the roundabout. Then every
+car would try to acquire the semaphore on it's direction. All the cars that did
+acquire a semaphore would wait for the corresponding number of cars to arrive
+in the roundabout (noLanes * numOfCars/Lane), only releasing the semaphore
+after meeting this condition.
+    The 5th task was a generalization of the 3rd and 4th tasks, only using
+a semaphore list and a barrier for the initial synchronization. Because
+there was only an upper limit on the number of cars in the roundabout,
+every car would enter the roundabout whenever the corresponding semaphore
+would have a free permit.
+    The 6th task was done using a combination of semaphores, blocking queues
+and wait/notify. Every car that had no priority would try to enter the
+intersection, stopping if there was any other car in it (with a wait function
+call). The car would put it's ID in a blocking queue, in order to later print
+the cars in the correct order. The prioritized cars would pass if there was
+no other car with high priority (achieved by using a semaphore). When it did
+finish passing, it would notify the waiting cars with a notifyAll call.
+    The 7th task was done once again using the wait/notify combination.
+If the cars had a green light, they would pass as if nothing happened. If
+there were pedestrians on the crosswalk, the cars would wait until all the
+pedestrians passed, at which point a notifyAll function call was made.
+    The 8th task was done using two semaphores: one for each driving
+direction. Initially, direction 0 had all the permits available, while
+direction 1 had no permits. When direction 0 finishes it's available permits,
+direction 1 gets the permits, while direction 0 remains on 0 permits. The
+process is repeated until all the cars have passed.
+    The 9th task is a generalization of the 8th task. Each driving direction
+has it's own semaphore, with the only starting directions having permits.
+When a direction finishes it's permits, we verify that the direction still has
+cars on it, if yes it is placed at the end of the corresponding free lane queue,
+if not it is removed from the queue. The process is repeated until all the cars
+have passed. In order to retain the passing order, a blocking queue is used.
+    The 10th task was done using only a barrier and a blocking queue. The cars
+wait for the passing of the train and then pass the railroad in the order that
+they arrived in, using the sorting done in the queue.
